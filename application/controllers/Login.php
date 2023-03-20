@@ -25,14 +25,18 @@ class Login extends MY_Controller
   {
     $username = $this->input->post('username');
     $password = $this->input->post('password');
-    if ($this->Akun_m->cek_login($username, $password) == 0) {
+    $cek = $this->Akun_m->cek_login($username, $password);
+    if ($cek == 0) {
       $this->session->set_flashdata('msg', '<div class="alert alert-danger alert-dismissable text-white">username tidak terdaftar!</div>');
-
       redirect('login');
       exit;
-    } else if ($this->Akun_m->cek_login($username, $password) == 1) {
+    } else if ($cek == 1) {
       setcookie('username_temp', $username, time() + 5, "/");
       $this->session->set_flashdata('msg', '<div class="alert alert-danger alert-dismissable text-white">Password Salah!</div>');
+      redirect('login');
+      exit;
+    } else if ($cek == 2) {
+      $this->session->set_flashdata('msg', '<div class="alert alert-danger alert-dismissable text-white">Akun anda tidak aktif!</div>');
       redirect('login');
       exit;
     }

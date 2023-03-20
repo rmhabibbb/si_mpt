@@ -30,14 +30,29 @@
 <!-- <script async defer src="https://buttons.github.io/buttons.js"></script> -->
 <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
 <script src="<?= base_url(); ?>assets/js/argon-dashboard.min.js?v=2.0.4"></script>
+<script type="text/javascript" src="<?= base_url(); ?>assets/js/autoNumeric.js"></script>
+<script type="text/javascript" src="<?= base_url(); ?>assets/js/jquery.mask.js"></script>
 <!-- Sweet Alert -->
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!-- sidebar show -->
 <script>
-    const element = document.getElementById('link-<?= $index ?>');
+    const element = document.getElementById('link-<?= $link ?>');
     element.scrollIntoView({
         block: "center"
+    });
+
+    var optRupiah = {
+        aSep: '.',
+        aDec: ',',
+        aForm: true,
+        vMax: '9999999999999',
+        vMin: '-9999999999999'
+    };
+    $('.rupiah').autoNumeric('init', optRupiah);
+    $("#rp_harga").keyup(function() {
+        var number = $('#rp_harga').autoNumeric('get');
+        $('#harga').val(number);
     });
 </script>
 </body>
