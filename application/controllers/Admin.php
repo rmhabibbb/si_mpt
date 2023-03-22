@@ -17,6 +17,7 @@ class Admin extends MY_Controller
 		$this->load->model('Akun_m');
 		$this->load->model('Kategori_m');
 		$this->load->model('Barang_m');
+		$this->load->model('Supplier_m');
 
 		$this->data['profil'] = $this->Akun_m->get_row(['username' => $this->data['username']]);
 	}
@@ -369,15 +370,16 @@ class Admin extends MY_Controller
 		$this->form_validation->set_rules('nama_barang', 'Nama Barang', 'required');
 		$this->form_validation->set_rules('id_kategori', 'Kategori', 'required');
 		$this->form_validation->set_rules('harga', 'Harga Harga', 'required');
-		$this->form_validation->set_rules('stok', 'Foto Barang', 'required');
 		$this->form_validation->set_rules('stok', 'Stok Barang', 'required');
 
 		if ($this->form_validation->run() == false) {
-			$data = [
-				'status' 		=> 'Warning',
-				'icon' 		=> 'warning',
-				'message' 		=> validation_errors(),
-			];
+			$this->data['title'] 	= 'Form Tambah Barang';
+			$this->data['index'] 	= 5.3;
+			$this->data['link'] 	= 'master_barang';
+
+			$this->data['list_kategori'] = $this->Kategori_m->get(['deleted_at' => NULL]);
+			$this->data['content'] 	= 'admin/master/barang_form';
+			$this->load->view('admin/template/layout', $this->data);
 		} else {
 
 			if ($_FILES['foto']['name'] !== '') {
@@ -389,16 +391,13 @@ class Admin extends MY_Controller
 				if ($this->upload($id_foto, 'barang', 'foto')) {
 					$foto = $id_foto . '.jpg';
 				} else {
-					$data = [
-						'status' 		=> 'Warning',
-						'icon' 		=> 'warning',
-						'message' 		=> 'Gagal upload foto, coba lagi!!',
-					];
+					$this->session->set_flashdata('warning', 'Gagal upload foto, coba lagi!');
+					redirect('admin/barang_form');
+					exit;
 				}
 			} else {
 				$foto = NULL;
 			}
-			exit;
 
 			$data = [
 				'nama_barang' => addslashes($this->input->post('nama_barang', true)),
@@ -411,20 +410,15 @@ class Admin extends MY_Controller
 			];
 
 			if ($this->Barang_m->insert($data)) {
-				$data = [
-					'status' 		=> 'Success',
-					'icon' 		=> 'success',
-					'message' 		=> 'Barang berhasil ditambah!',
-				];
+				$this->session->set_flashdata('success', 'Barang berhasil ditambah!');
+				redirect('admin/barang');
+				exit;
 			} else {
-				$data = [
-					'status' 		=> 'Warning',
-					'icon' 		=> 'warning',
-					'message' 		=> 'Gagal, coba lagi!',
-				];
+				$this->session->set_flashdata('warning', 'Gagal, coba lagi!');
+				redirect('admin/barang_form');
+				exit;
 			}
 		}
-		echo json_encode($data);
 	}
 
 	public function barang_edit()
@@ -440,6 +434,7 @@ class Admin extends MY_Controller
 			exit;
 		}
 
+		$this->data['list_kategori'] = $this->Kategori_m->get(['deleted_at' => NULL]);
 		$this->data['barang'] = $this->Barang_m->get_row(['id_barang' => $id]);
 
 		$this->data['title'] 	= 'Form Edit Barang';
@@ -452,38 +447,63 @@ class Admin extends MY_Controller
 
 	public function barang_update()
 	{
-
+		$id = $this->POST('id_barang');
 		$this->form_validation->set_rules('nama_barang', 'Nama Barang', 'required');
+		$this->form_validation->set_rules('id_kategori', 'Kategori', 'required');
+		$this->form_validation->set_rules('harga', 'Harga Harga', 'required');
+		$this->form_validation->set_rules('stok', 'Stok Barang', 'required');
 
 		if ($this->form_validation->run() == false) {
-			$data = [
-				'status' 		=> 'Warning',
-				'icon' 		=> 'warning',
-				'message' 		=> validation_errors(),
-			];
+			$this->data['list_kategori'] = $this->Kategori_m->get(['deleted_at' => NULL]);
+			$this->data['barang'] = $this->Barang_m->get_row(['id_barang' => $id]);
+
+			$this->data['title'] 	= 'Form Edit Barang';
+			$this->data['index'] 	= 5.3;
+			$this->data['link'] 	= 'master_barang';
+
+			$this->data['content'] 	= 'admin/master/barang_edit';
+			$this->load->view('admin/template/layout', $this->data);
 		} else {
+
+			$path = $this->POST('path');
+
+			if ($_FILES['foto']['name'] !== '') {
+				$id_foto = rand(1, 9);
+				for ($j = 1; $j <= 4; $j++) {
+					$id_foto .= rand(0, 9);
+				}
+				if ($this->upload($id_foto, 'barang', 'foto')) {
+					@unlink(realpath(APPPATH . '../assets/barang/' . $path));
+					$foto = $id_foto . '.jpg';
+				} else {
+					$this->session->set_flashdata('warning', 'Gagal upload foto, coba lagi!');
+					redirect('admin/barang_edit/' . $id);
+					exit;
+				}
+			} else {
+				$foto = $path;
+			}
 
 			$data = [
 				'nama_barang' => addslashes($this->input->post('nama_barang', true)),
+				'id_kategori' => addslashes($this->input->post('id_kategori', true)),
 				'deskripsi' => addslashes($this->input->post('deskripsi', true)),
+				'harga' => addslashes($this->input->post('harga', true)),
+				'foto' => $foto,
+				'stok' => addslashes($this->input->post('stok', true)),
 				'updated_at' => date('Y-m-d H:i:s')
 			];
 
-			if ($this->Barang_m->update($this->POST('id_barang'), $data)) {
-				$data = [
-					'status' 		=> 'Success',
-					'icon' 		=> 'success',
-					'message' 		=> 'Data berhasil diedit!',
-				];
+			if ($this->Barang_m->update($id, $data)) {
+				$this->session->set_flashdata('success', 'Data barang berhasil diedit!');
+				redirect('admin/barang_edit/' . $id);
+				exit;
 			} else {
-				$data = [
-					'status' 		=> 'Warning',
-					'icon' 		=> 'warning',
-					'message' 		=> 'Gagal, coba lagi!',
-				];
+				$this->session->set_flashdata('warning', 'Gagal, coba lagi!');
+				redirect('admin/barang_edit/' . $id);
+				exit;
 			}
 		}
-		echo json_encode($data);
 	}
 
 	public function barang_delete()
@@ -496,6 +516,136 @@ class Admin extends MY_Controller
 
 	// MASTER BARANG
 
+	// MASTER SUPPLIER
+
+	public function supplier()
+	{
+		$this->data['title'] 	= 'Master Supplier';
+		$this->data['index'] 	= 5.4;
+		$this->data['link'] 	= 'master_supplier';
+		$this->data['list_supplier']   	= $this->Supplier_m->get(['deleted_at' => NULL]);
+		$this->data['content'] 	= 'admin/master/supplier_index';
+		$this->load->view('admin/template/layout', $this->data);
+	}
+
+	public function supplier_form()
+	{
+		$this->data['title'] 	= 'Form Tambah Supplier';
+		$this->data['index'] 	= 5.4;
+		$this->data['link'] 	= 'master_supplier';
+
+		$this->data['list_kategori'] = $this->Kategori_m->get(['deleted_at' => NULL]);
+		$this->data['content'] 	= 'admin/master/supplier_form';
+		$this->load->view('admin/template/layout', $this->data);
+	}
+
+	public function supplier_store()
+	{
+		$this->form_validation->set_rules('nama_supplier', 'Nama Supplier', 'required');
+		$this->form_validation->set_rules('kontak', 'Kontak', 'required');
+		$this->form_validation->set_rules('alamat', 'Alamat', 'required');
+
+		if ($this->form_validation->run() == false) {
+			$data = [
+				'status' 		=> 'warning',
+				'icon' 		=> 'warning',
+				'message' 		=> validation_errors(),
+			];
+		} else {
+			$data_supplier = [
+				'nama_supplier' => addslashes($this->input->post('nama_supplier', true)),
+				'kontak' => addslashes($this->input->post('kontak', true)),
+				'alamat' => addslashes($this->input->post('alamat', true)),
+				'created_at' => date('Y-m-d H:i:s')
+			];
+
+			if ($this->Supplier_m->insert($data_supplier)) {
+				$data = [
+					'status' 		=> 'success',
+					'icon' 		=> 'success',
+					'message' 		=> 'Supplier berhasil ditambah!',
+				];
+			} else {
+				$data = [
+					'status' 		=> 'warning',
+					'icon' 		=> 'warning',
+					'message' 		=> 'Gagal, coba lagi!',
+				];
+			}
+		}
+		echo json_encode($data);
+	}
+
+	public function supplier_edit()
+	{
+		$id =  $this->uri->segment(3);
+		if ($this->Supplier_m->get_num_row(['id_supplier' => $id]) == 0) {
+			$this->session->set_flashdata('warning', 'Data tidak ditemukan!');
+			redirect('admin/supplier');
+			exit;
+		} elseif ($this->Supplier_m->get_row(['id_supplier' => $id])->deleted_at != NULL) {
+			$this->session->set_flashdata('warning', 'Data tidak ditemukan!');
+			redirect('admin/supplier');
+			exit;
+		}
+
+		$this->data['supplier'] = $this->Supplier_m->get_row(['id_supplier' => $id]);
+
+		$this->data['title'] 	= 'Form Edit Supplier';
+		$this->data['index'] 	= 5.4;
+		$this->data['link'] 	= 'master_supplier';
+
+		$this->data['content'] 	= 'admin/master/supplier_edit';
+		$this->load->view('admin/template/layout', $this->data);
+	}
+
+	public function supplier_update()
+	{
+		$this->form_validation->set_rules('nama_supplier', 'Nama Supplier', 'required');
+		$this->form_validation->set_rules('kontak', 'Kontak', 'required');
+		$this->form_validation->set_rules('alamat', 'Alamat', 'required');
+
+		if ($this->form_validation->run() == false) {
+			$data = [
+				'status' 		=> 'warning',
+				'icon' 		=> 'warning',
+				'message' 		=> validation_errors(),
+			];
+		} else {
+			$id = $this->POST('id_supplier');
+			$data_supplier = [
+				'nama_supplier' => addslashes($this->input->post('nama_supplier', true)),
+				'kontak' => addslashes($this->input->post('kontak', true)),
+				'alamat' => addslashes($this->input->post('alamat', true)),
+				'created_at' => date('Y-m-d H:i:s')
+			];
+
+			if ($this->Supplier_m->update($id, $data_supplier)) {
+				$data = [
+					'status' 		=> 'success',
+					'icon' 		=> 'success',
+					'message' 		=> 'Supplier berhasil diedit!',
+				];
+			} else {
+				$data = [
+					'status' 		=> 'warning',
+					'icon' 		=> 'warning',
+					'message' 		=> 'Gagal, coba lagi!',
+				];
+			}
+		}
+		echo json_encode($data);
+	}
+
+	public function supplier_delete()
+	{
+		$id = $this->input->post('id');
+		$this->Supplier_m->update($id, ['deleted_at' => date('Y-m-d H:i:s')]);
+
+		redirect('admin/supplier');
+	}
+
+	// MASTER BARANG
 
 
 

@@ -1,3 +1,14 @@
+<style>
+    table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    table img {
+        width: 80px;
+        height: 100px;
+    }
+</style>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
@@ -22,8 +33,14 @@
                             <tbody>
                                 <?php foreach ($list_barang as $key => $value) : ?>
                                     <tr id="<?= $value->id_barang; ?>">
-                                        <td><?= $value->id_barang; ?></td>
-                                        <td> </td>
+                                        <td style="text-align:center; vertical-align:middle"><?= $value->id_barang; ?></td>
+                                        <td style="text-align:center">
+                                            <?php if ($value->foto == NULL) { ?>
+                                                <img alt="Image placeholder" src="<?= base_url('assets/default.png') ?>">
+                                            <?php } else { ?>
+                                                <img alt="Image placeholder" src="<?= base_url('assets/barang/') ?><?= $value->foto ?>">
+                                            <?php } ?>
+                                        </td>
                                         <td><?= $value->nama_barang; ?></td>
                                         <td><?= $this->Kategori_m->get_row(['id_kategori' => $value->id_kategori])->nama_kategori; ?></td>
                                         <td><?= number_format($value->harga, 0, '.', ','); ?></td>
@@ -31,7 +48,7 @@
                                         <td><?= $value->deskripsi; ?></td>
                                         <td>
                                             <a href="<?= base_url('admin/barang_edit/') . $value->id_barang; ?>" class="btn btn-success me-2"><i class="fas fa-edit"></i></a>
-                                            <a href="javascript:" class="btn btn-danger hapus-user" data-id="<?= $value->id_barang; ?>"><i class="fas fa-trash"></i></a>
+                                            <a href="javascript:" class="btn btn-danger hapus-barang" data-id="<?= $value->id_barang; ?>"><i class="fas fa-trash"></i></a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -71,7 +88,7 @@
 <?php endif; ?>
 
 <script>
-    $('.hapus-user').on('click', function() {
+    $('.hapus-barang').on('click', function() {
         Swal.fire({
             title: 'Apakah kamu yakin ?',
             text: "kamu akan menghapus data ini!",

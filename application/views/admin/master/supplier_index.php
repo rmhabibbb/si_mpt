@@ -1,29 +1,42 @@
+<style>
+    table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    table img {
+        width: 80px;
+        height: 100px;
+    }
+</style>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <a href="<?= base_url(); ?>admin/kategori_form" class="btn btn-primary mb-5"><i class="fas fa-user-plus mr-5"></i>Tambah</a>
+                    <a href="<?= base_url(); ?>admin/supplier_form" class="btn btn-primary mb-5"><i class="fas fa-user-plus mr-5"></i>Tambah</a>
 
                     <div class="table-responsive">
                         <table class="table table-hover table-bordered table-sm" id="example" style="width:100%">
                             <thead style="background-color:#051E34;color:#fff;">
                                 <tr>
-                                    <th>ID Kategori</th>
-                                    <th>Nama Kategori</th>
-                                    <th>Deskripsi</th>
+                                    <th style="width: 30px;">ID Supplier</th>
+                                    <th>Nama Supplier</th>
+                                    <th>Kontak</th>
+                                    <th>Alamat</th>
                                     <th style="width: 50px;">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($list_kategori as $key => $value) : ?>
-                                    <tr id="<?= $value->id_kategori; ?>">
-                                        <td><?= $value->id_kategori; ?></td>
-                                        <td><?= $value->nama_kategori; ?></td>
-                                        <td><?= $value->deskripsi; ?></td>
+                                <?php foreach ($list_supplier as $key => $value) : ?>
+                                    <tr id="<?= $value->id_supplier; ?>">
+                                        <td style="text-align:center; vertical-align:middle"><?= $value->id_supplier; ?></td>
+                                        <td><?= $value->nama_supplier; ?></td>
+                                        <td><?= $value->kontak; ?></td>
+                                        <td><?= $value->alamat; ?></td>
                                         <td>
-                                            <a href="<?= base_url('admin/kategori_edit/') . $value->id_kategori; ?>" class="btn btn-success me-2"><i class="fas fa-edit"></i></a>
-                                            <a href="javascript:" class="btn btn-danger hapus-kategori" data-id="<?= $value->id_kategori; ?>"><i class="fas fa-trash"></i></a>
+                                            <a href="<?= base_url('admin/supplier_edit/') . $value->id_supplier; ?>" class="btn btn-success me-2"><i class="fas fa-edit"></i></a>
+                                            <a href="javascript:" class="btn btn-danger hapus-supplier" data-id="<?= $value->id_supplier; ?>"><i class="fas fa-trash"></i></a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -63,7 +76,7 @@
 <?php endif; ?>
 
 <script>
-    $('.hapus-kategori').on('click', function() {
+    $('.hapus-supplier').on('click', function() {
         Swal.fire({
             title: 'Apakah kamu yakin ?',
             text: "kamu akan menghapus data ini!",
@@ -76,7 +89,7 @@
             if (result.isConfirmed) {
                 var id = $(this).attr('data-id');
                 $.ajax({
-                    'url': '<?= base_url('admin/kategori_delete') ?>',
+                    'url': '<?= base_url('admin/supplier_delete') ?>',
                     'type': 'POST',
                     'data': {
                         id: id
