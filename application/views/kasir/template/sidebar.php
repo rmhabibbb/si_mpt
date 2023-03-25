@@ -12,7 +12,7 @@
       <i class="fas fa-times p-2 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand m-0" href="#">
         <img src="<?= base_url(); ?>assets/img/user.svg" class="navbar-brand-img h-100 rounded-circle border border-3 bg-white" alt="main_logo">
-        <span class="ms-1 font-weight-bold txt-menu-h"><?= strtoupper($this->session->username); ?></span>
+        <span class="ms-1 font-weight-bold txt-menu-h"><?= strtoupper($profil->nama_user); ?></span>
       </a>
     </div>
 
@@ -30,7 +30,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a href="<?= base_url(); ?>/kasir/profil" class="btn nav-link shadow-none border-0 <?php echo (isset($index) && $index == 2) ? 'active' : '' ?>" id="link-<?= $index ?>">
+        <a href="<?= base_url(); ?>kasir/profil" class="btn nav-link shadow-none border-0 <?php echo (isset($index) && $index == 6) ? 'active' : '' ?>" id="link-profile">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
             <i class="ni ni-badge text-white text-sm opacity-10"></i>
           </div>

@@ -669,66 +669,118 @@ class Admin extends MY_Controller
 
 	public function profil()
 	{
+
+		$this->data['title'] 	= 'Profile';
+		$this->data['link'] 	= 'profile';
 		$this->data['index'] = 6;
-		$this->data['content'] = 'admin/index';
+		$this->data['content'] = 'admin/profile';
 		$this->load->view('admin/template/layout', $this->data);
 	}
 
-	public function proses_edit_profil()
+	public function profile_update()
 	{
-		if ($this->POST('edit')) {
-			if ($this->Akun_m->get_num_row(['username' => $this->POST('username')]) != 0 && $this->POST('username') != $this->POST('username_x')) {
-				$this->session->set_flashdata('msg', '<div class="alert alert-warning alert-dismissable">Username telah digunakan!</div>');
-				redirect('admin/profil');
-				exit();
-			}
+		$this->form_validation->set_rules('username', 'Username', 'required');
+		$this->form_validation->set_rules('nama_user', 'Nama', 'required');
+		$this->form_validation->set_rules('no_hp', 'Nomor HP', 'required');
 
-			$this->Akun_m->update($this->POST('username_x'), ['username' => $this->POST('username')]);
-			$user_session = [
-				'username' => $this->POST('username'),
-			];
-			$this->session->set_userdata($user_session);
-
-
-			$this->flashmsg('PROFIL BERHASIL DISIMPAN!', 'success');
-			redirect('admin/profil');
-			exit();
-		} elseif ($this->POST('edit2')) {
-
-			$msg = "";
-			$cek = 0;
-
-			if (md5($this->POST('pass')) != $this->data['profil']->password) {
-				$msg = $msg . "Password lama salah! <br>";
-				$cek = 1;
-			}
-
-			if ($this->POST('pass1') != $this->POST('pass2')) {
-				$msg = $msg . "Konfirmasi Password baru tidak sama! <br>";
-				$cek = 1;
-			}
-
-
-			if ($cek == 1) {
-				$this->session->set_flashdata('msg', '<div class="alert alert-warning alert-dismissable">' . $msg . '</div>');
-				redirect('admin/profil');
-				exit();
-			}
+		if ($this->form_validation->run() == false) {
 			$data = [
-				'password' => md5($this->POST('pass2'))
+				'status' 		=> 'warning',
+				'icon' 		=> 'warning',
+				'message' 		=> validation_errors(),
 			];
-
-			$this->Akun_m->update($this->data['username'], $data);
-
-			$this->flashmsg('Password baru telah disimpan!', 'success');
-			redirect('admin/profil');
-			exit();
 		} else {
 
-			redirect('admin/profil');
-			exit();
+			$username      = preg_replace('/\s+/', '',  $this->input->post('username', true));
+			$username_old      = preg_replace('/\s+/', '',  $this->input->post('username_old', true));
+			if ($this->Akun_m->get_num_row(['username' => $username]) != 0 && ($username_old != $username)) {
+				$data = [
+					'status' 		=> 'warning',
+					'icon' 		=> 'warning',
+					'message' 		=> 'Username telah digunakan!',
+				];
+			} else {
+				$data = [
+					'username'      => addslashes($username),
+					'nama_user' => addslashes($this->input->post('nama_user', true)),
+					'no_hp' => addslashes($this->input->post('no_hp', true)),
+					'updated_at' =>  date('Y-m-d H:i:s')
+				];
+
+				if ($this->Akun_m->update($username_old, $data)) {
+					$user_session = [
+						'username'	=> $username,
+					];
+					$this->session->set_userdata($user_session);
+					$data = [
+						'status' 		=> 'success',
+						'icon' 		=> 'success',
+						'message' 		=> 'Data berhasil disimpan!',
+					];
+				} else {
+					$data = [
+						'status' 		=> 'warning',
+						'icon' 		=> 'warning',
+						'message' 		=> 'Gagal, coba lagi!',
+					];
+				}
+			}
 		}
+		echo json_encode($data);
 	}
+
+	public function profile_update_pass()
+	{
+		$this->form_validation->set_rules('password_old', 'Password Lama', 'required');
+		$this->form_validation->set_rules('password', 'Password Baru', 'required');
+		$this->form_validation->set_rules('password_confirm', 'Password Konfirmasi', 'required');
+
+		if ($this->form_validation->run() == false) {
+			$data = [
+				'status' 		=> 'warning',
+				'icon' 		=> 'warning',
+				'message' 		=> validation_errors(),
+			];
+		} else {
+
+			if ($this->data['profil']->password != md5($this->POST('password_old'))) {
+				$data = [
+					'status' 		=> 'warning',
+					'icon' 		=> 'warning',
+					'message' 		=> 'Password lama salah!',
+				];
+			} elseif ($this->input->post('password') != $this->input->post('password_confirm')) {
+				$data = [
+					'status' 		=> 'warning',
+					'icon' 		=> 'warning',
+					'message' 		=> 'Password dan konfirmasi password tidak sama',
+				];
+			} else {
+				$username      = preg_replace('/\s+/', '',  $this->input->post('id', true));
+				$data = [
+					'updated_at' =>  date('Y-m-d H:i:s'),
+					'password' => md5($this->input->post('password')),
+				];
+
+				if ($this->Akun_m->update($username, $data)) {
+					$data = [
+						'status' 		=> 'success',
+						'icon' 		=> 'success',
+						'message' 		=> 'Password berhasil diganti!',
+					];
+				} else {
+					$data = [
+						'status' 		=> 'warning',
+						'icon' 		=> 'warning',
+						'message' 		=> 'Gagal, coba lagi!',
+					];
+				}
+			}
+		}
+
+		echo json_encode($data);
+	}
+
 	// PROFIL
 
 }
