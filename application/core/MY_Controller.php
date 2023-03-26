@@ -15,6 +15,8 @@ class MY_Controller extends CI_Controller
 			return $this->load->view('admin/template/layout', $data);
 		} elseif ($role == 'kasir') {
 			return $this->load->view('kasir/template/layout', $data);
+		} elseif ($role == 'pemilik') {
+			return $this->load->view('pemilik/template/layout', $data);
 		}
 		return false;
 	}

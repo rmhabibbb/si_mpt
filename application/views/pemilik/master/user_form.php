@@ -6,7 +6,7 @@
                 <h4>Form Tambah User</h4>
                 <hr style="border: 1px solid black;" class="mb-5">
             </div>
-            <form action="<?= base_url() . 'admin/user_store'; ?>" method="post">
+            <form action="<?= base_url() . 'pemilik/user_store'; ?>" method="post">
                 <div class="row mb-4">
                     <div class="col-sm-3">
                         <label for="username" class="col-form-label">Username</label>
@@ -50,7 +50,9 @@
                     <div class="col-sm-9">
                         <select class="form-control" id="role" name="role" required>
                             <option value="">Pilih Role</option>
+                            <option value="1">Admin</option>
                             <option value="2">Kasir</option>
+                            <option value="3">Pemilik</option>
                         </select>
                         <?= form_error('role', '<small class="text-danger ">*', '</small>'); ?>
                     </div>
@@ -68,7 +70,7 @@
                     <div class="col-sm-3"></div>
                     <div class="col-sm-9">
                         <button type="submit" class="btn btn-primary">Simpan</button>
-                        <a href="<?= base_url(); ?>admin/users" class="btn btn-danger">Kembali</a>
+                        <a href="<?= base_url(); ?>pemilik/users" class="btn btn-danger">Kembali</a>
                     </div>
                 </div>
             </form>

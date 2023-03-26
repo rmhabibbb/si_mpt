@@ -15,6 +15,9 @@ class Login extends MY_Controller
         case 2:
           redirect('kasir');
           break;
+        case 3:
+          redirect('pemilik');
+          break;
       }
       exit;
     }

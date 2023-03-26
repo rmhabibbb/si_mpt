@@ -31,22 +31,6 @@
       </li>
 
       <li class="nav-item">
-        <a href="<?= base_url(); ?>admin/transaksi" class="btn nav-link shadow-none border-0 <?php echo (isset($index) && $index == 2) ? 'active' : '' ?>" id="link-transaksi">
-          <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="ni ni-basket text-white text-sm opacity-10"></i>
-          </div>
-          <span class="nav-link-text ms-1 fw-bold txt-menu-h">Transaksi</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="<?= base_url(); ?>admin/supply" class="btn nav-link shadow-none border-0 <?php echo (isset($index) && $index == 3) ? 'active' : '' ?>" id="link-supply">
-          <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="ni ni-bag-17 text-white text-sm opacity-10"></i>
-          </div>
-          <span class="nav-link-text ms-1 fw-bold txt-menu-h">Supply</span>
-        </a>
-      </li>
-      <li class="nav-item">
         <a class="btn nav-link shadow-none border-0 <?php echo (isset($index) && $index >= 4 && $index < 5) ? 'active' : '' ?>" id="dashboard" data-bs-toggle="collapse" href="#laporan" role="button" aria-expanded="false" aria-controls="collapseExample">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
             <i class="ni ni-book-bookmark text-white text-sm opacity-10"></i>
@@ -55,13 +39,13 @@
         </a>
         <div class="collapse ms-5 me-3 mt-1 text-start <?php echo (isset($index) && $index == 2) ? 'show' : '' ?>" id="laporan">
 
-          <a href="<?= base_url() ?>admin/laporan_penjualan" class="nav-link btn w-100 txt-menu
+          <a href="<?= base_url() ?>pemilik/laporan_penjualan" class="nav-link btn w-100 txt-menu
                                     <?= ($index == 4.1) ? 'active' : '' ?>
                                     " id="link-laporan_penjualan"> Penjualan </a>
-          <a href="<?= base_url() ?>admin/laporan_pembelian" class="nav-link btn w-100 txt-menu
+          <a href="<?= base_url() ?>pemilik/laporan_pembelian" class="nav-link btn w-100 txt-menu
                                     <?= ($index == 4.2) ? 'active' : '' ?>
                                     " id="link-laporan_pembelian"> Pembelian </a>
-          <a href="<?= base_url() ?>admin/laporan_stok_barang" class="nav-link btn w-100 txt-menu
+          <a href="<?= base_url() ?>pemilik/laporan_stok_barang" class="nav-link btn w-100 txt-menu
                                     <?= ($index == 4.3) ? 'active' : '' ?>
                                     " id="link-laporan_stok_barang"> Stok Barang </a>
 
@@ -76,23 +60,15 @@
         </a>
         <div class="collapse ms-5 me-3 mt-1 text-start <?php echo (isset($index) && $index >= 5 & $index < 6) ? 'show' : '' ?>" id="master">
 
-          <!-- <a href="<?= base_url() ?>admin/users" class="nav-link btn w-100 txt-menu
+          <a href="<?= base_url() ?>pemilik/users" class="nav-link btn w-100 txt-menu
                                     <?= ($index == 5.1) ? 'active' : '' ?>
-                                    " id="link-master_user"> User </a> -->
-          <a href="<?= base_url() ?>admin/kategori" class="nav-link btn w-100 txt-menu
-                                    <?= ($index == 5.2) ? 'active' : '' ?>
-                                    " id="link-master_kategori"> Kategori </a>
-          <a href="<?= base_url() ?>admin/barang" class="nav-link btn w-100 txt-menu
-                                    <?= ($index == 5.3) ? 'active' : '' ?>
-                                    " id="link-master_barang"> Barang </a>
-          <a href="<?= base_url() ?>admin/supplier" class="nav-link btn w-100 txt-menu
-                                    <?= ($index == 5.4) ? 'active' : '' ?>
-                                    " id="link-master_supplier"> Supplier </a>
+                                    " id="link-master_user"> User </a>
+
 
         </div>
       </li>
       <li class="nav-item">
-        <a href="<?= base_url(); ?>admin/profil" class="btn nav-link shadow-none border-0 <?php echo (isset($index) && $index == 6) ? 'active' : '' ?>" id="link-profile">
+        <a href="<?= base_url(); ?>pemilik/profil" class="btn nav-link shadow-none border-0 <?php echo (isset($index) && $index == 6) ? 'active' : '' ?>" id="link-profile">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
             <i class="ni ni-badge text-white text-sm opacity-10"></i>
           </div>

@@ -6,7 +6,7 @@
                 <h4>Form Edit User</h4>
                 <hr style="border: 1px solid black;" class="mb-5">
             </div>
-            <form action="<?= base_url() . 'admin/user_update'; ?>" method="post">
+            <form action="<?= base_url() . 'pemilik/user_update'; ?>" method="post">
 
                 <input type="hidden" class="form-control" name="username_old" value="<?= $user->username ?>">
                 <div class="row mb-4">
@@ -42,7 +42,9 @@
                     </div>
                     <div class="col-sm-9">
                         <select class="form-control" id="role" name="role" required>
+                            <option value="1" <?= ($user->role == 1) ? 'selected' : '' ?>>Admin</option>
                             <option value="2" <?= ($user->role == 2) ? 'selected' : '' ?>>Kasir</option>
+                            <option value="2" <?= ($user->role == 3) ? 'selected' : '' ?>>Pemilik</option>
                         </select>
                         <?= form_error('role', '<small class="text-danger ">*', '</small>'); ?>
                     </div>
@@ -60,7 +62,7 @@
                     <div class="col-sm-3"></div>
                     <div class="col-sm-6">
                         <button type="submit" class="btn btn-primary">Simpan</button>
-                        <a href="<?= base_url(); ?>admin/users" class="btn btn-danger">Kembali</a>
+                        <a href="<?= base_url(); ?>pemilik/users" class="btn btn-danger">Kembali</a>
                     </div>
                     <div class="col-sm-3 align-items-end">
                         <a data-bs-target="#modal-ganti-password" data-bs-toggle="modal" id="ganti-password" class="btn btn-primary ">Ganti Password</a>
@@ -135,7 +137,7 @@
             var password = $('#password').val();
             var password_confirm = $('#password_confirm').val();
             $.ajax({
-                'url': '<?php echo base_url() ?>admin/user_update_pass',
+                'url': '<?php echo base_url() ?>pemilik/user_update_pass',
                 'type': 'POST',
                 'data': {
                     id: id,
