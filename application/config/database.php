@@ -75,11 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => '127.0.0.1',
-	'port'	=> '8000',
-	'username' => 'root',
-	'password' => '',
-	'database' => 'db_si_mpt',
+	'hostname' => '103.55.39.194',
+	'username' => 'collect1_lisancollection',
+	'password' => 'lisancollection123',
+	'database' => 'collect1_db_si_mpt',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

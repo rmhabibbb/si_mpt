@@ -349,9 +349,53 @@ class Admin extends MY_Controller
 		$this->data['index'] 	= 5.3;
 		$this->data['link'] 	= 'master_barang';
 
-		$this->data['list_barang']   	= $this->Barang_m->get(['deleted_at' => NULL]);
+		$this->data['list_kategori']   	= $this->Kategori_m->get();
 		$this->data['content'] 	= 'admin/master/barang_index';
 		$this->load->view('admin/template/layout', $this->data);
+	}
+
+	public function getDataBarang()
+	{
+		$x = $this->input->get('x');
+		$list = $this->Barang_m->get_datatables($x);
+		$data = array();
+		$no = $_POST['start'];
+		foreach ($list as $field) {
+
+			$row = array();
+			$row[] = '<span style="text-align:center; vertical-align:middle">' . $field->id_barang . '</span>';
+
+
+			if ($field->foto == NULL || $field->foto == '') {
+				$row[] = '<span style="text-align:center;">
+							<img alt="Image placeholder" src="' . base_url('assets/default.png') . '">
+						</span> ';
+			} else {
+
+				$row[] = '<span style="text-align:center"> 
+							<img alt="Image placeholder" src="' . base_url('assets/barang')  . '/' . $field->foto . '">
+						</span> ';
+			}
+
+			$row[] = $field->nama_barang;
+			$row[] = $field->nama_kategori;
+			$row[] = '<span class="rupiah">Rp. ' . number_format($field->harga, 0, ',', '.') . '</span>';
+			$row[] = $field->stok;
+
+			$row[] = '<a href="' . base_url('admin/barang_edit/') . $field->id_barang . '" class="btn btn-success me-2"><i class="fas fa-edit"></i></a>
+			<a href="javascript:" class="btn btn-danger hapus-barang" onClick="hapusBarang(' . $field->id_barang . ')" data-id="' . $field->id_barang . '"><i class="fas fa-trash"></i></a>';
+
+			$data[] = $row;
+		}
+
+		$output = array(
+			"draw" 				=> $_POST['draw'],
+			"recordsTotal" 		=> $this->Barang_m->count_all($x),
+			"recordsFiltered" 	=> $this->Barang_m->count_filtered($x),
+			"data" 				=> $data,
+		);
+		//output dalam format JSON
+		echo json_encode($output);
 	}
 
 	public function barang_form()
@@ -406,6 +450,8 @@ class Admin extends MY_Controller
 				'harga' => addslashes($this->input->post('harga', true)),
 				'foto' => $foto,
 				'stok' => addslashes($this->input->post('stok', true)),
+				'ukuran' => addslashes($this->input->post('ukuran', true)),
+				'jenis' => addslashes($this->input->post('jenis', true)),
 				'created_at' => date('Y-m-d H:i:s')
 			];
 
@@ -491,6 +537,8 @@ class Admin extends MY_Controller
 				'harga' => addslashes($this->input->post('harga', true)),
 				'foto' => $foto,
 				'stok' => addslashes($this->input->post('stok', true)),
+				'ukuran' => addslashes($this->input->post('ukuran', true)),
+				'jenis' => addslashes($this->input->post('jenis', true)),
 				'updated_at' => date('Y-m-d H:i:s')
 			];
 

@@ -56,6 +56,28 @@
                         <?= form_error('stok', '<small class="text-danger ">*', '</small>'); ?>
                     </div>
                 </div>
+                <div class="row mb-4">
+                    <div class="col-sm-3">
+                        <label for="jenis" class="col-form-label">Jenis</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <select class="form-control" id="jenis" name="jenis">
+                            <option value="">Pilih Jenis</option>
+                            <option value="Tangan Panjang" <?= ($barang->jenis == 'Tangan Panjang') ? 'selected' : '' ?>>Tangan Panjang</option>
+                            <option value="Tangan Pendek" <?= ($barang->jenis == 'Tangan Pendek') ? 'selected' : '' ?>>Tangan Pendek</option>
+                        </select>
+                        <?= form_error('jenis', '<small class="text-danger ">*', '</small>'); ?>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-sm-3">
+                        <label for="ukuran" class="col-form-label">Ukuran</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="ukuran" name="ukuran" value="<?= $barang->ukuran ?>">
+                        <?= form_error('ukuran', '<small class="text-danger ">*', '</small>'); ?>
+                    </div>
+                </div>
                 <div class="row mb-4 mb-4">
                     <div class="col-sm-3">
                         <label for="deskripsi" class="col-form-label">Deskripsi</label>
