@@ -22,13 +22,22 @@
     <!-- LOOPING MENU -->
     <ul class="navbar-nav mt-2">
       <li class="nav-item">
-        <a href="<?= base_url(); ?>kasir/transaksi" class="btn nav-link shadow-none border-0 <?php echo (isset($index) && $index == 1) ? 'active' : '' ?>" id="link-<?= $index ?>">
+        <a href="<?= base_url(); ?>kasir/transaksi" class="btn nav-link shadow-none border-0 <?php echo (isset($index) && $index == 2) ? 'active' : '' ?>" id="link-transaksi">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="ni ni-basket text-white text-sm opacity-10"></i>
+            <i class="ni ni-cart text-white text-sm opacity-10"></i>
           </div>
-          <span class="nav-link-text ms-1 fw-bold txt-menu-h">Transaksi</span>
+          <span class="nav-link-text ms-1 fw-bold txt-menu-h">Transaksi Barang</span>
         </a>
       </li>
+      <li class="nav-item">
+        <a href="<?= base_url(); ?>kasir/retur" class="btn nav-link shadow-none border-0 <?php echo (isset($index) && $index == 9) ? 'active' : '' ?>" id="link-return">
+          <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+            <i class="ni ni-bag-17  text-white text-sm opacity-10"></i>
+          </div>
+          <span class="nav-link-text ms-1 fw-bold txt-menu-h">Return Barang</span>
+        </a>
+      </li>
+
       <li class="nav-item">
         <a href="<?= base_url(); ?>kasir/profil" class="btn nav-link shadow-none border-0 <?php echo (isset($index) && $index == 6) ? 'active' : '' ?>" id="link-profile">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
