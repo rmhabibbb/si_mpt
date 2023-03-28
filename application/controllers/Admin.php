@@ -30,6 +30,59 @@ class Admin extends MY_Controller
 		$this->load->view('admin/template/layout', $this->data);
 	}
 
+	// TRANSAKSI
+	public function transaksi()
+	{
+		$this->data['title'] 	= 'Transaksi Barang';
+		$this->data['index'] 	= 2;
+		$this->data['link'] 	= 'transaksi';
+
+		$this->data['list_kategori']   	= $this->Kategori_m->get();
+		$this->data['content'] 	= 'admin/transaksi/index';
+		$this->load->view('admin/template/layout', $this->data);
+	}
+
+	public function getDataBarangTransaksi()
+	{
+		$x = $this->input->get('x');
+		$list = $this->Barang_m->get_datatables($x);
+		$data = array();
+		$no = $_POST['start'];
+		foreach ($list as $field) {
+
+			$row = array();
+
+			if ($field->foto == NULL || $field->foto == '') {
+				$row[] = '<span style="text-align:center;">
+							<img alt="Image placeholder" src="' . base_url('assets/default.png') . '">
+						</span> ';
+			} else {
+
+				$row[] = '<span style="text-align:center"> 
+							<img alt="Image placeholder" src="' . base_url('assets/barang')  . '/' . $field->foto . '">
+						</span> ';
+			}
+
+			$row[] = $field->nama_barang . '<br>(' . $field->nama_kategori . ')';
+			$row[] = $field->jenis . '<br> ' . $field->ukuran . '<br> Stok : ' . $field->stok;
+
+			$row[] = '<div class="w-100 text-center" ><button data-bs-target="#modal_detail_barang" data-bs-toggle="modal" id="view-modal_detail_barang"  class="btn btn-sm btn-success"  data-id="' . $field->id_barang . '"><span class="fa fa-eye  btn-aksi"></span></button></div>';
+
+			$data[] = $row;
+		}
+
+		$output = array(
+			"draw" 				=> $_POST['draw'],
+			"recordsTotal" 		=> $this->Barang_m->count_all($x),
+			"recordsFiltered" 	=> $this->Barang_m->count_filtered($x),
+			"data" 				=> $data,
+		);
+		//output dalam format JSON
+		echo json_encode($output);
+	}
+
+	// TRANSAKSI
+
 
 	// MASTER USERS
 
