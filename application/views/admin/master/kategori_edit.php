@@ -71,7 +71,6 @@
         $('#btnSave').on('click', function(e) {
             e.preventDefault();
             var data = $('#formEditKategori').serialize();
-            console.log(data)
             $.ajax({
                 'url': '<?php echo base_url() ?>admin/kategori_update',
                 'type': 'POST',

@@ -20,7 +20,9 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-5"><img alt="Image placeholder" style="width :100%" src="<?= base_url('assets/default.png') ?>"></div>
+                    <div class="col-md-5">
+                        <div class="div" id="foto-barang"> </div>
+                    </div>
                     <div class="col-md-7">
 
                         <div class="row mb-3">
@@ -83,11 +85,14 @@
                         </div>
 
                     </div>
-
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Tambah</button>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <div style=" font-size:120%">
+                    <b>Harga : Rp. <span id="harga"></span> </b>
                 </div>
+                <button type=" button" class="btn btn-primary" id="btnSendtoCart" data-id-cart="">Tambah ke Keranjang</button>
             </div>
         </div>
     </div>
+</div>
