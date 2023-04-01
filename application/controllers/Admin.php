@@ -490,7 +490,7 @@ class Admin extends MY_Controller
 
 		$subtotal = $dtrans->sub_total - ($qty_return * $dtrans->harga);
 
-		if ($this->DetailTransaksi_m->update($id, ['sub_total' => $subtotal, 'qty_return' => $dtrans->$qty_return + $qty_return])) {
+		if ($this->DetailTransaksi_m->update($id, ['sub_total' => $subtotal, 'qty_return' => $dtrans->qty_return + $qty_return])) {
 			$total_bayar = $this->DetailTransaksi_m->get_totalbayar($kd);
 
 			if ($this->Transaksi_m->update($kd, ['total_bayar' => $total_bayar])) {
