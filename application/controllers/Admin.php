@@ -767,6 +767,14 @@ class Admin extends MY_Controller
 			'status' => 1
 		];
 
+		$detail = $this->DetailTransaksi_m->get(['kd_transaksi' => $id]);
+
+		foreach ($detail as $val) {
+			$barang = $this->Barang_m->get_row(['id_barang' => $val->id_barang]);
+			$this->Barang_m->update($val->id_barang, ['stok' => $barang->stok + $val->qty]);
+		}
+
+
 		if ($this->Supply_m->update($id, $data)) {
 			$data = [
 				'status' 		=> 'success',
