@@ -35,7 +35,7 @@
 
 <!-- sidebar show -->
 <script>
-    const element = document.getElementById('link-<?= $index ?>');
+    const element = document.getElementById('link-<?= $link ?>');
     element.scrollIntoView({
         block: "center"
     });
