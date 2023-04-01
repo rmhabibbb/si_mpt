@@ -21,6 +21,7 @@ class Admin extends MY_Controller
 		$this->load->model('Supplier_m');
 		$this->load->model('Transaksi_m');
 		$this->load->model('DetailTransaksi_m');
+		$this->load->model('Supply_m');
 
 		$this->data['profil'] = $this->Akun_m->get_row(['username' => $this->data['username']]);
 	}
@@ -525,7 +526,264 @@ class Admin extends MY_Controller
 
 		echo json_encode($data);
 	}
+
 	// RETUR TRANSAKSI
+
+
+	// SUPPLY BARANG
+	public function supply()
+	{
+		$this->data['title'] 	= 'Supply Barang';
+		$this->data['index'] 	= 3;
+		$this->data['link'] 	= 'supply';
+
+		$this->data['list_kategori']   	= $this->Kategori_m->get();
+		$this->data['list_supplier']   	= $this->Supplier_m->get(['deleted_at' => NULL]);
+		$this->data['content'] 	= 'admin/supply/index';
+		$this->load->view('admin/template/layout', $this->data);
+	}
+
+	public function load_cart_supply()
+	{
+		$data['cart'] = $this->Supply_m->get_row(['username' => $this->data['profil']->username, 'status' => 0]);
+		if (isset($data['cart'])) {
+			$data['detail_cart'] = $this->DetailTransaksi_m->view_transaksi_detail(['kd_transaksi' => $data['cart']->kd_transaksi]);
+			$data['code'] = 200;
+			echo json_encode($data);
+		} else {
+			$data['code'] = 400;
+			echo json_encode($data);
+		}
+	}
+
+	public function send_to_cart_supply()
+	{
+		$id 	= $this->input->post('id');
+		$qty 	= $this->input->post('qty');
+		$harga_supply 	= $this->input->post('harga_supply');
+
+		$barang = $this->Barang_m->get_row(['id_barang' => $id]);
+
+		$cart = $this->Supply_m->get_row(['username' => $this->data['profil']->username, 'status' => 0]);
+		if (isset($cart)) {
+			$cek = $this->DetailTransaksi_m->get_row(['kd_transaksi' => $cart->kd_transaksi, 'id_barang' => $id]);
+
+			if (isset($cek)) {
+				$data_cart = [
+					'kd_transaksi' => $cart->kd_transaksi,
+					'id_barang' => $id,
+					'qty' => $cek->qty + $qty,
+					'harga' => $harga_supply,
+					'sub_total' => $cek->sub_total + ($harga_supply * $qty),
+					'is_return' => 0
+				];
+				if ($this->DetailTransaksi_m->update($cek->id, $data_cart)) {
+					$data = [
+						'status' 		=> 'success',
+						'icon' 		=> 'success',
+						'message' 		=> 'barang berhasil ditambah ke keranjang.',
+					];
+				} else {
+					$data = [
+						'status' 		=> 'warning',
+						'icon' 		=> 'warning',
+						'message' 		=> 'Gagal, coba lagi!',
+					];
+				}
+			} else {
+				$data_cart = [
+					'kd_transaksi' => $cart->kd_transaksi,
+					'id_barang' => $id,
+					'qty' => $qty,
+					'harga' => $harga_supply,
+					'sub_total' => $harga_supply * $qty,
+					'is_return' => 0
+				];
+				if ($this->DetailTransaksi_m->insert($data_cart)) {
+					$data = [
+						'status' 		=> 'success',
+						'icon' 		=> 'success',
+						'message' 		=> 'barang berhasil ditambah ke keranjang.',
+					];
+				} else {
+					$data = [
+						'status' 		=> 'warning',
+						'icon' 		=> 'warning',
+						'message' 		=> 'Gagal, coba lagi!',
+					];
+				}
+			}
+		} else {
+			$tb = 'SB-' . date('YmdHis');
+			$data_trans = [
+				'kd_transaksi' => $tb,
+				'status' => 0,
+				'username' => $this->data['profil']->username
+			];
+
+			if ($this->Supply_m->insert($data_trans)) {
+				$cek = $this->DetailTransaksi_m->get_row(['kd_transaksi' => $tb, 'id_barang' => $id]);
+
+				if (isset($cek)) {
+					$data_cart = [
+						'kd_transaksi' => $tb,
+						'id_barang' => $id,
+						'qty' => $cek->qty + $qty,
+						'harga' => $harga_supply,
+						'sub_total' => $cek->sub_total + ($harga_supply * $qty),
+						'is_return' => 0
+					];
+					if ($this->DetailTransaksi_m->update($cek->id, $data_cart)) {
+						$data = [
+							'status' 		=> 'success',
+							'icon' 		=> 'success',
+							'message' 		=> 'barang berhasil ditambah ke keranjang.',
+						];
+					} else {
+						$data = [
+							'status' 		=> 'warning',
+							'icon' 		=> 'warning',
+							'message' 		=> 'Gagal, coba lagi!',
+						];
+					}
+				} else {
+					$data_cart = [
+						'kd_transaksi' => $tb,
+						'id_barang' => $id,
+						'qty' => $qty,
+						'harga' => $harga_supply,
+						'sub_total' => $harga_supply * $qty,
+						'is_return' => 0
+					];
+					if ($this->DetailTransaksi_m->insert($data_cart)) {
+						$data = [
+							'status' 		=> 'success',
+							'icon' 		=> 'success',
+							'message' 		=> 'barang berhasil ditambah ke keranjang.',
+						];
+					} else {
+						$data = [
+							'status' 		=> 'warning',
+							'icon' 		=> 'warning',
+							'message' 		=> 'Gagal, coba lagi!',
+						];
+					}
+				}
+			} else {
+				$data = [
+					'status' 		=> 'warning',
+					'icon' 		=> 'warning',
+					'message' 		=> 'Gagal, coba lagi!',
+				];
+			}
+		}
+
+		echo json_encode($data);
+	}
+
+	public function batal_detail_supply()
+	{
+		$id 	= $this->input->post('id');
+		$detail = $this->DetailTransaksi_m->get_row(['id' => $id]);
+		$this->DetailTransaksi_m->delete($id);
+
+		$data = [
+			'status' 		=> 'success',
+			'icon' 		=> 'success',
+			'message' 		=> 'berhasil',
+		];
+
+		echo json_encode($data);
+	}
+
+	public function tambah_detail_supply()
+	{
+		$id 	= $this->input->post('id');
+		$detail = $this->DetailTransaksi_m->get_row(['id' => $id]);
+
+		$this->DetailTransaksi_m->update($id, ['qty' => $detail->qty + 1, 'sub_total' => $detail->sub_total + $detail->harga]);
+		$data = [
+			'status' 		=> 'success',
+			'icon' 		=> 'success',
+			'message' 		=> 'Berhasil',
+		];
+		echo json_encode($data);
+	}
+
+	public function batal_transaksi_supply()
+	{
+		$kd 	= $this->input->post('kd');
+
+		$transaksi = $this->Supply_m->get_row(['kd_transaksi' => $kd]);
+		$detail = $this->DetailTransaksi_m->get(['kd_transaksi' => $kd]);
+
+		foreach ($detail as $val) {
+			$this->DetailTransaksi_m->delete($val->id);
+		}
+
+		if ($this->Supply_m->delete($kd)) {
+			$data = [
+				'status' 		=> 'success',
+				'icon' 		=> 'success',
+				'message' 		=> 'Transaksi supply berhasil dibatalkan',
+			];
+		} else {
+			$data = [
+				'status' 		=> 'warning',
+				'icon' 		=> 'warning',
+				'message' 		=> 'Gagal, coba lagi',
+			];
+		}
+
+		echo json_encode($data);
+	}
+
+	public function kurang_detail_supply()
+	{
+		$id 	= $this->input->post('id');
+		$detail = $this->DetailTransaksi_m->get_row(['id' => $id]);
+
+		if (($detail->qty - 1) == 0) {
+			$this->DetailTransaksi_m->delete($id);
+		} else {
+			$this->DetailTransaksi_m->update($id, ['qty' => $detail->qty - 1, 'sub_total' => $detail->sub_total - $detail->harga]);
+		}
+
+		$data = [
+			'status' 		=> 'success',
+			'icon' 		=> 'success',
+			'message' 		=> 'Berhasil',
+		];
+		echo json_encode($data);
+	}
+
+	public function send_checkout_supply()
+	{
+		$id = $this->POST('kd_transaksi');
+		$data = [
+			'id_supplier' => addslashes($this->input->post('id_supplier', true)),
+			'total_bayar' => addslashes($this->input->post('total_bayar', true)),
+			'tgl_transaksi' => date('Y-m-d H:i:s'),
+			'status' => 1
+		];
+
+		if ($this->Supply_m->update($id, $data)) {
+			$data = [
+				'status' 		=> 'success',
+				'icon' 		=> 'success',
+				'message' 		=> 'Transaksi supply barang berhasil dicheckout!',
+			];
+		} else {
+			$data = [
+				'status' 		=> 'warning',
+				'icon' 		=> 'warning',
+				'message' 		=> 'Gagal, coba lagi!',
+			];
+		}
+		echo json_encode($data);
+	}
+	// SUPPLY BARANG
+
 
 	// MASTER USERS
 
