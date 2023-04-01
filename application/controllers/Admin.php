@@ -13,6 +13,7 @@ class Admin extends MY_Controller
 			redirect('login');
 			exit;
 		}
+		date_default_timezone_set("Asia/Jakarta");
 
 		$this->load->model('Akun_m');
 		$this->load->model('Kategori_m');
@@ -390,7 +391,7 @@ class Admin extends MY_Controller
 			$row[] = $field->kd_transaksi;
 			$row[] = ($field->nama_customer != NULL) ? $field->nama_customer : '-';
 			$row[] = number_format($field->total_bayar, 2, '.', ',');
-			$row[] = date('d-m-Y', strtotime($field->tgl_transaksi));
+			$row[] = date('d-m-Y H:i', strtotime($field->tgl_transaksi));
 
 			$row[] = '<a href="' . base_url('admin/detail_transaksi/') . $field->kd_transaksi . '" class="btn btn-success me-2"><i class="fas fa-eye"></i></a>';
 
@@ -405,6 +406,124 @@ class Admin extends MY_Controller
 		);
 		//output dalam format JSON
 		echo json_encode($output);
+	}
+
+	public function getDetailTransaksi()
+	{
+		$kd = $this->POST('kd');
+		$list = $this->DetailTransaksi_m->get_datatables($kd);
+		$data = array();
+		$no = $_POST['start'];
+		$i = 1;
+		foreach ($list as $field) {
+
+			$row = array();
+
+
+			$row[] = $i++;
+			if ($field->foto == NULL || $field->foto == '') {
+				$row[] = '<span style="text-align:center;">
+							<img alt="Image placeholder" src="' . base_url('assets/default.png') . '">
+						</span> ';
+			} else {
+
+				$row[] = '<span style="text-align:center"> 
+							<img alt="Image placeholder" src="' . base_url('assets/barang')  . '/' . $field->foto . '">
+						</span> ';
+			}
+			$row[] = $field->nama_barang;
+			$row[] = number_format($field->harga, 2, '.', ',');
+			$row[] = $field->qty;
+			$row[] = ($field->qty_return == 0) ? '0' : $field->qty_return;
+			$row[] = number_format($field->sub_total, 2, '.', ',');
+
+			if ($field->qty != $field->qty_return) {
+				$row[] = '<div class="w-100 text-center" ><button data-bs-target="#modal_retur_barang" data-bs-toggle="modal" id="view-modal_retur_barang"  class="btn btn-sm btn-warning" data-harga="' . $field->harga . '"   data-sub="' . $field->sub_total . '" data-qty-return="' . $field->qty_return . '"  data-qty="' . $field->qty . '" data-barang="' . $field->id_barang . '" data-id="' . $field->id . '">Retur</button></div>';
+			} else {
+				$row[] = '-';
+			}
+
+			$data[] = $row;
+		}
+
+		$output = array(
+			"draw" 				=> $_POST['draw'],
+			"recordsTotal" 		=> $this->DetailTransaksi_m->count_all($kd),
+			"recordsFiltered" 	=> $this->DetailTransaksi_m->count_filtered($kd),
+			"data" 				=> $data,
+		);
+		//output dalam format JSON
+		echo json_encode($output);
+	}
+
+	public function detail_transaksi()
+	{
+		$id =  $this->uri->segment(3);
+		if ($this->Transaksi_m->get_num_row(['kd_transaksi' => $id]) == 0) {
+			$this->session->set_flashdata('warning', 'Data tidak ditemukan!');
+			redirect('admin/retur');
+			exit;
+		}
+
+		$this->data['trans'] = $this->Transaksi_m->get_row(['kd_transaksi' => $id]);
+
+
+		$this->data['title'] 	= 'Detail Transaksi';
+		$this->data['index'] 	= 9;
+		$this->data['link'] 	= 'return';
+
+		$this->data['content'] 	= 'admin/transaksi/detail_transaksi';
+		$this->load->view('admin/template/layout', $this->data);
+	}
+
+	public function send_return()
+	{
+		$id = $this->POST('id');
+		$kd = $this->POST('kd_transaksi');
+		$qty_return = $this->POST('qty_return');
+
+		$trans = $this->Transaksi_m->get_row(['kd_transaksi' => $kd]);
+
+		$dtrans = $this->DetailTransaksi_m->get_row(['id' => $id]);
+
+		$stok = $this->Barang_m->get_row(['id_barang' => $dtrans->id_barang])->stok;
+
+		$subtotal = $dtrans->sub_total - ($qty_return * $dtrans->harga);
+
+		if ($this->DetailTransaksi_m->update($id, ['sub_total' => $subtotal, 'qty_return' => $qty_return])) {
+			$total_bayar = $this->DetailTransaksi_m->get_totalbayar($kd);
+
+			if ($this->Transaksi_m->update($kd, ['total_bayar' => $total_bayar])) {
+				if ($this->Barang_m->update($dtrans->id_barang, ['stok' => $stok + $qty_return])) {
+					$data = [
+						'status' 		=> 'success',
+						'icon' 		=> 'success',
+						'message' 		=> 'Barang berhasil di retur!',
+						'total_bayar' => $total_bayar
+					];
+				} else {
+					$data = [
+						'status' 		=> 'warning',
+						'icon' 		=> 'warning',
+						'message' 		=> 'Gagal, coba lagi!',
+					];
+				}
+			} else {
+				$data = [
+					'status' 		=> 'warning',
+					'icon' 		=> 'warning',
+					'message' 		=> 'Gagal, coba lagi!',
+				];
+			}
+		} else {
+			$data = [
+				'status' 		=> 'warning',
+				'icon' 		=> 'warning',
+				'message' 		=> 'Gagal, coba lagi!',
+			];
+		}
+
+		echo json_encode($data);
 	}
 	// RETUR TRANSAKSI
 

@@ -85,6 +85,9 @@
             }, {
                 "targets": [3],
                 "orderable": false,
+            }, {
+                "targets": [4],
+                "orderable": false,
             }, ],
 
         });
