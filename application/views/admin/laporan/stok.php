@@ -15,7 +15,7 @@
         <div class="col-md-12 bg-white p-4 rounded shadow">
             <?php echo form_open_multipart('admin/download_laporan_stok'); ?>
             <div class="row">
-                <div class="col-md-8 mt-2">
+                <div class="col-md-7 mt-2">
                     <div class="row">
                         <div class="col-sm-2">
                             <label for="start_date">Tanggal : </label>
@@ -25,14 +25,14 @@
                                 <div class="col-md-6">
                                     <input class="form-control" type="date" name="start_date" id="start_date">
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     <input class="form-control" type="date" name="end_date" id="end_date" readonly>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2 mt-2">
+                <div class="col-md-5 mt-2">
                     <a href="javascript:" class="btn btn-primary me-2" id="filter">Filter</a>
                     <button type="submit" class="btn btn-success" id="export"><span class="far fa-file-excel me-2"></span>Export</button>
                 </div>
