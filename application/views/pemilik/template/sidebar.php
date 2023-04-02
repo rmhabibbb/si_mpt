@@ -21,14 +21,6 @@
   <div class="collapse navbar-collapse w-100  flex-fill navbar align-items-start" id="sidenav-collapse-main">
     <!-- LOOPING MENU -->
     <ul class="navbar-nav mt-2">
-      <li class="nav-item">
-        <a href="<?= base_url(); ?>" class="btn nav-link shadow-none border-0 <?php echo (isset($index) && $index == 1) ? 'active' : '' ?>" id="link-dashboard">
-          <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="fa fa-home text-white text-sm opacity-10"></i>
-          </div>
-          <span class="nav-link-text ms-1 fw-bold txt-menu-h">Dashboard</span>
-        </a>
-      </li>
 
       <li class="nav-item">
         <a class="btn nav-link shadow-none border-0 <?php echo (isset($index) && $index >= 4 && $index < 5) ? 'active' : '' ?>" id="dashboard" data-bs-toggle="collapse" href="#laporan" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -37,7 +29,7 @@
           </div>
           <span class="nav-link-text ms-1 fw-bold txt-menu-h">Laporan</span>
         </a>
-        <div class="collapse ms-5 me-3 mt-1 text-start <?php echo (isset($index) && $index == 2) ? 'show' : '' ?>" id="laporan">
+        <div class="collapse ms-5 me-3 mt-1 text-start <?php echo (isset($index) && ($index > 4 && $index < 5)) ? 'show' : '' ?>" id="laporan">
 
           <a href="<?= base_url() ?>pemilik/laporan_penjualan" class="nav-link btn w-100 txt-menu
                                     <?= ($index == 4.1) ? 'active' : '' ?>

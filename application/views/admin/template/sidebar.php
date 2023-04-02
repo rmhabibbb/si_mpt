@@ -54,7 +54,7 @@
           </div>
           <span class="nav-link-text ms-1 fw-bold txt-menu-h">Laporan</span>
         </a>
-        <div class="collapse ms-5 me-3 mt-1 text-start <?php echo (isset($index) && $index == 4) ? 'show' : '' ?>" id="laporan">
+        <div class="collapse ms-5 me-3 mt-1 text-start <?php echo (isset($index) && ($index > 4 && $index < 5)) ? 'show' : '' ?>" id="laporan">
 
           <a href="<?= base_url() ?>admin/laporan_penjualan" class="nav-link btn w-100 txt-menu
                                     <?= ($index == 4.1) ? 'active' : '' ?>

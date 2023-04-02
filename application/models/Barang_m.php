@@ -98,4 +98,18 @@ class Barang_m extends MY_Model
 
         return $query->row();
     }
+
+    public function view_barang($ref, $order, $cond = '')
+    {
+        if (is_array($cond))
+            $this->db->where($cond);
+        if (is_string($cond) && strlen($cond) > 3)
+            $this->db->where($cond);
+
+        $this->db->order_by($ref, $order);
+        $this->db->select('a.*, b.nama_kategori')->join('tbl_kategori b', 'a.id_kategori=b.id_kategori', 'left');
+        $query = $this->db->get('tbl_barang as a');
+
+        return $query->result();
+    }
 }

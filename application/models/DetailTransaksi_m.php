@@ -89,7 +89,7 @@ class DetailTransaksi_m extends MY_Model
     public function view_transaksi_detail($cond)
     {
         $this->db->where($cond);
-        $this->db->select('a.*, b.nama_barang')->join('tbl_barang b', 'a.id_barang=b.id_barang', 'left');
+        $this->db->select('a.*, b.nama_barang, b.foto')->join('tbl_barang b', 'a.id_barang=b.id_barang', 'left');
         $query = $this->db->get('tbl_detail_transaksi as a');
 
         return $query->result();
@@ -102,5 +102,23 @@ class DetailTransaksi_m extends MY_Model
         $query = $this->db->get('tbl_detail_transaksi');
 
         return $query->row()->total_bayar;
+    }
+
+    public function get_sum_beli($cond)
+    {
+        $this->db->select('sum(qty) as qty');
+        $this->db->where($cond);
+        $query = $this->db->get('tbl_detail_transaksi');
+
+        return $query->row()->qty;
+    }
+
+    public function get_sum_jual($cond)
+    {
+        $this->db->select('(sum(qty) - sum(qty_return)) as qty');
+        $this->db->where($cond);
+        $query = $this->db->get('tbl_detail_transaksi');
+
+        return $query->row()->qty;
     }
 }

@@ -19,7 +19,7 @@ class Transaksi_m extends MY_Model
 	var $column_search = array('kd_transaksi', 'nama_customer', 'total_bayar', 'tgl_transaksi'); //field yang diizin untuk pencarian 
 	var $order = array('tgl_transaksi' => 'DESC'); // default order 
 
-	private function _get_datatables_query()
+	private function _get_datatables_query($start_date, $end_date)
 	{
 
 		$i = 0;
@@ -43,6 +43,15 @@ class Transaksi_m extends MY_Model
 			$i++;
 		}
 
+		if ($start_date != "" && $end_date != "") {
+			if ($start_date == $end_date) {
+				$this->db->where(['DATE(tgl_transaksi)' => $start_date]);
+			} else {
+				$this->db->where(['DATE(tgl_transaksi) >=' => $start_date]);
+				$this->db->where(['DATE(tgl_transaksi) <=' => $end_date]);
+			}
+		}
+
 		$this->db->where(['status' => 1]);
 		$this->db->from('tbl_transaksi_penjualan');
 
@@ -55,25 +64,32 @@ class Transaksi_m extends MY_Model
 		}
 	}
 
-	function get_datatables()
+	function get_datatables($start_date = "", $end_date = "")
 	{
-		$this->_get_datatables_query();
+		$this->_get_datatables_query($start_date, $end_date);
 		if ($_POST['length'] != -1)
 			$this->db->limit($_POST['length'], $_POST['start']);
 		$query = $this->db->get();
 		return $query->result();
 	}
 
-	function count_filtered()
+	function count_filtered($start_date = "", $end_date = "")
 	{
-		$this->_get_datatables_query();
+		$this->_get_datatables_query($start_date, $end_date);
 		$query = $this->db->get();
 		return $query->num_rows();
 	}
 
-	public function count_all()
+	public function count_all($start_date = "", $end_date = "")
 	{
-
+		if ($start_date != "" && $end_date != "") {
+			if ($start_date == $end_date) {
+				$this->db->where(['DATE(tgl_transaksi)' => $start_date]);
+			} else {
+				$this->db->where(['DATE(tgl_transaksi) >=' => $start_date]);
+				$this->db->where(['DATE(tgl_transaksi) <=' => $end_date]);
+			}
+		}
 		$this->db->where(['status' => 1]);
 		$this->db->from('tbl_transaksi_penjualan');
 		return $this->db->count_all_results();
