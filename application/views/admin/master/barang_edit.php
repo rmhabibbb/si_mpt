@@ -63,8 +63,8 @@
                     <div class="col-sm-9">
                         <select class="form-control" id="jenis" name="jenis">
                             <option value="">Pilih Jenis</option>
-                            <option value="Tangan Panjang" <?= ($barang->jenis == 'Tangan Panjang') ? 'selected' : '' ?>>Tangan Panjang</option>
-                            <option value="Tangan Pendek" <?= ($barang->jenis == 'Tangan Pendek') ? 'selected' : '' ?>>Tangan Pendek</option>
+                            <option value="Panjang" <?= ($barang->jenis == 'Panjang') ? 'selected' : '' ?>> Panjang</option>
+                            <option value="Pendek" <?= ($barang->jenis == 'Pendek') ? 'selected' : '' ?>> Pendek</option>
                         </select>
                         <?= form_error('jenis', '<small class="text-danger ">*', '</small>'); ?>
                     </div>
