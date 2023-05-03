@@ -156,7 +156,7 @@
                                 text: 'Data berhasil dihapus.',
                                 icon: 'success',
                                 showConfirmButton: false,
-                                timer: 1000
+                                timer: 5000
 
                             })
                         },
