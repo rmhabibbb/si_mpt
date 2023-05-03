@@ -751,8 +751,7 @@ class Pemilik extends MY_Controller
                 'nama_user' => addslashes($this->input->post('nama_user', true)),
                 'no_hp' => addslashes($this->input->post('no_hp', true)),
                 'role' => addslashes($this->input->post('role', true)),
-                'is_aktif' => addslashes($this->input->post('aktif', true)),
-                'password' => md5($this->input->post('password')),
+                'is_aktif' => addslashes($this->input->post('aktif', true)), 
                 'updated_at' =>  date('Y-m-d H:i:s')
             ];
 
