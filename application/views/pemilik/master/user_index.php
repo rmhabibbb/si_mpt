@@ -30,7 +30,7 @@
                                             <?= ($value->is_aktif == 1) ? 'Aktif' : 'Tidak Aktif'; ?>
                                         </td>
                                         <td>
-                                            <a href="<?= base_url('admin/user_edit/') . $value->username; ?>" class="btn btn-success me-2"><i class="fas fa-edit"></i></a>
+                                            <a href="<?= base_url('pemilik/user_edit/') . $value->username; ?>" class="btn btn-success me-2"><i class="fas fa-edit"></i></a>
                                             <a href="javascript:" class="btn btn-danger hapus-user" data-id="<?= $value->username; ?>"><i class="fas fa-trash"></i></a>
                                         </td>
                                     </tr>
