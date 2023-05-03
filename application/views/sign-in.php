@@ -49,7 +49,7 @@
                         <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto border shadow-lg p-3 mb-5 bg-body rounded">
                             <div class="card card-plain">
                                 <div class="pb-0 text-start text-center">
-                                    <h4>Sistem Informasi Manajemen Penjualan Terdistribusiiii</h4>
+                                    <h4>Sistem Informasi Manajemen Penjualan Terdistribusi</h4>
                                 </div>
                                 <div class="card-body" style="margin-top:10px">
                                     <div id="view-alert">
