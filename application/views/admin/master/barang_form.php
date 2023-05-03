@@ -63,8 +63,8 @@
                     <div class="col-sm-9">
                         <select class="form-control" id="jenis" name="jenis">
                             <option value="">Pilih Jenis</option>
-                            <option value="Tangan Panjang">Tangan Panjang</option>
-                            <option value="Tangan Pendek">Tangan Pendek</option>
+                            <option value="Panjang">Panjang</option>
+                            <option value="Pendek">Pendek</option>
                         </select>
                         <?= form_error('jenis', '<small class="text-danger ">*', '</small>'); ?>
                     </div>
