@@ -544,7 +544,7 @@ class Admin extends MY_Controller
 		$this->data['index'] 	= 3;
 		$this->data['link'] 	= 'supply';
 
-		$this->data['list_kategori']   	= $this->Kategori_m->get();
+		$this->data['list_kategori']   	= $this->Kategori_m->get(['deleted_at' => NULL]);
 		$this->data['list_supplier']   	= $this->Supplier_m->get(['deleted_at' => NULL]);
 		$this->data['content'] 	= 'admin/supply/index';
 		$this->load->view('admin/template/layout', $this->data);
