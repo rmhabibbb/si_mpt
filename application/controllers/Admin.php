@@ -44,7 +44,7 @@ class Admin extends MY_Controller
 		$this->data['index'] 	= 2;
 		$this->data['link'] 	= 'transaksi';
 
-		$this->data['list_kategori']   	= $this->Kategori_m->get();
+		$this->data['list_kategori']   	= $this->Kategori_m->get(['deleted_at' => NULL]);
 		$this->data['content'] 	= 'admin/transaksi/index';
 		$this->load->view('admin/template/layout', $this->data);
 	}
