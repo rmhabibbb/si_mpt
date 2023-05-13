@@ -37,7 +37,7 @@ class Kasir extends MY_Controller
 		$this->data['index'] 	= 2;
 		$this->data['link'] 	= 'transaksi';
 
-		$this->data['list_kategori']   	= $this->Kategori_m->get();
+		$this->data['list_kategori']   	= $this->Kategori_m->get(['deleted_at' => NULL]);
 		$this->data['content'] 	= 'kasir/transaksi/index';
 		$this->load->view('kasir/template/layout', $this->data);
 	}
