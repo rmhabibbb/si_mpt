@@ -7,7 +7,7 @@
     <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
     <link rel="icon" type="image/png" href="<?= base_url(); ?>assets/img/logos/logo.png">
     <title>
-        Login - Sistem Informasi Manajemen Penjualan Terdistribusi
+        Login - Sistem Informasi Lisan Collection
     </title>
     <!--     Fonts and icons     -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -49,7 +49,7 @@
                         <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto border shadow-lg p-3 mb-5 bg-body rounded">
                             <div class="card card-plain">
                                 <div class="pb-0 text-start text-center">
-                                    <h4>Sistem Informasi Lisan Collection</h4>
+                                    <h4>Sistem Informasi<br>Lisan Collection</h4>
                                 </div>
                                 <div class="card-body" style="margin-top:10px">
                                     <div id="view-alert">
