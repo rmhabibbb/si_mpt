@@ -16,7 +16,7 @@
                 <div class="card-body">
                     <div class="row d-flex justify-content-between">
                         <div class="col-md-4">
-                            <a href="<?= base_url(); ?>admin/barang_form" class="btn btn-primary mb-5"><i class="fas fa-user-plus mr-5"></i>Tambah</a>
+                            <a href="<?= base_url(); ?>admin/barang_form" class="btn btn-primary mb-5"><i class="fas fa-user-plus mr-5"></i>Tambah barang</a>
                         </div>
                         <div class="col-md-3">
                             <select class="form-select form-control" id="id_kategori">
