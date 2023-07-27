@@ -1152,7 +1152,7 @@ class Admin extends MY_Controller
 			$row[] = $field->stok;
 
 			$row[] = '<a href="' . base_url('admin/barang_edit/') . $field->id_barang . '" class="btn btn-success me-2"><i class="fas fa-edit"></i></a>
-			<a href="javascript:" class="btn btn-danger hapus-barang" onClick="hapusBarang(' . $field->id_barang . ')" data-id="' . $field->id_barang . '"><i class="fas fa-trash"></i></a>';
+			<a href="javascript:" class="btn btn-danger hapus-barang" onClick="hapusBarang("' . $field->id_barang . '")" data-id="' . $field->id_barang . '"><i class="fas fa-trash"></i></a>';
 
 			$data[] = $row;
 		}
