@@ -1180,6 +1180,7 @@ class Admin extends MY_Controller
 
 	public function barang_store()
 	{
+		$this->form_validation->set_rules('id_barang', 'ID Barang', 'required');
 		$this->form_validation->set_rules('nama_barang', 'Nama Barang', 'required');
 		$this->form_validation->set_rules('id_kategori', 'Kategori', 'required');
 		$this->form_validation->set_rules('harga', 'Harga Harga', 'required');
@@ -1194,6 +1195,11 @@ class Admin extends MY_Controller
 			$this->data['content'] 	= 'admin/master/barang_form';
 			$this->load->view('admin/template/layout', $this->data);
 		} else {
+			if ($this->Barang_m->get_num_row(['id_barang' => $this->input->post('id_barang')]) > 0) {
+				$this->session->set_flashdata('warning', 'ID Barang telah digunakan!');
+				redirect('admin/barang_form');
+				exit;
+			}
 
 			if ($_FILES['foto']['name'] !== '') {
 				$id_foto = rand(1, 9);
@@ -1213,6 +1219,7 @@ class Admin extends MY_Controller
 			}
 
 			$data = [
+				'id_barang' => addslashes($this->input->post('id_barang', true)),
 				'nama_barang' => addslashes($this->input->post('nama_barang', true)),
 				'id_kategori' => addslashes($this->input->post('id_kategori', true)),
 				'deskripsi' => addslashes($this->input->post('deskripsi', true)),
@@ -1239,6 +1246,7 @@ class Admin extends MY_Controller
 	public function barang_edit()
 	{
 		$id =  $this->uri->segment(3);
+
 		if ($this->Barang_m->get_num_row(['id_barang' => $id]) == 0) {
 			$this->session->set_flashdata('warning', 'Data tidak ditemukan!');
 			redirect('admin/barang');
@@ -1262,7 +1270,16 @@ class Admin extends MY_Controller
 
 	public function barang_update()
 	{
+		$idx = $this->POST('id_barangx');
 		$id = $this->POST('id_barang');
+		if ($this->Barang_m->get_num_row(['id_barang' => $id]) != 0 && $idx != $id) {
+			$this->session->set_flashdata('warning', 'ID Barang telah digunakan!');
+
+			redirect('admin/barang_edit/' . $id);
+			exit;
+		}
+
+
 		$this->form_validation->set_rules('nama_barang', 'Nama Barang', 'required');
 		$this->form_validation->set_rules('id_kategori', 'Kategori', 'required');
 		$this->form_validation->set_rules('harga', 'Harga Harga', 'required');
@@ -1300,6 +1317,7 @@ class Admin extends MY_Controller
 			}
 
 			$data = [
+				'id_barang' => addslashes($this->input->post('id_barang', true)),
 				'nama_barang' => addslashes($this->input->post('nama_barang', true)),
 				'id_kategori' => addslashes($this->input->post('id_kategori', true)),
 				'deskripsi' => addslashes($this->input->post('deskripsi', true)),
@@ -1311,7 +1329,7 @@ class Admin extends MY_Controller
 				'updated_at' => date('Y-m-d H:i:s')
 			];
 
-			if ($this->Barang_m->update($id, $data)) {
+			if ($this->Barang_m->update($idx, $data)) {
 				$this->session->set_flashdata('success', 'Data barang berhasil diedit!');
 				redirect('admin/barang_edit/' . $id);
 				exit;

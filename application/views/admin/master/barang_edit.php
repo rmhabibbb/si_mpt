@@ -13,8 +13,17 @@
                 <hr style="border: 1px solid black;" class="mb-5">
             </div>
             <form id="formAddBarang" enctype="multipart/form-data" action="<?= base_url() ?>admin/barang_update" method="post">
-                <input type="hidden" name="id_barang" value="<?= $barang->id_barang ?>">
+                <input type="hidden" name="id_barangx" value="<?= $barang->id_barang ?>">
                 <input type="hidden" name="path" value="<?= $barang->foto ?>">
+                <div class="row mb-4">
+                    <div class="col-sm-3">
+                        <label for="nama_barang" class="col-form-label">ID Barang</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="id_barang" name="id_barang" value="<?= $barang->id_barang ?>" required>
+                        <?= form_error('id_barang', '<small class="text-danger ">*', '</small>'); ?>
+                    </div>
+                </div>
                 <div class="row mb-4">
                     <div class="col-sm-3">
                         <label for="nama_barang" class="col-form-label">Nama Barang</label>

@@ -15,6 +15,15 @@
             <form id="formAddBarang" enctype="multipart/form-data" action="<?= base_url() ?>admin/barang_store" method="post">
                 <div class="row mb-4">
                     <div class="col-sm-3">
+                        <label for="nama_barang" class="col-form-label">ID Barang</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="id_barang" name="id_barang" required>
+                        <?= form_error('id_barang', '<small class="text-danger ">*', '</small>'); ?>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-sm-3">
                         <label for="nama_barang" class="col-form-label">Nama Barang</label>
                     </div>
                     <div class="col-sm-9">
