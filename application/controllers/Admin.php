@@ -1275,7 +1275,7 @@ class Admin extends MY_Controller
 		if ($this->Barang_m->get_num_row(['id_barang' => $id]) != 0 && $idx != $id) {
 			$this->session->set_flashdata('warning', 'ID Barang telah digunakan!');
 
-			redirect('admin/barang_edit/' . $id);
+			redirect('admin/barang_edit/' . $idx);
 			exit;
 		}
 
