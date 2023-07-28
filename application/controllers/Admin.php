@@ -1014,6 +1014,7 @@ class Admin extends MY_Controller
 
 	public function kategori_store()
 	{
+		$this->form_validation->set_rules('id_kategori', 'ID Kategori', 'required');
 		$this->form_validation->set_rules('nama_kategori', 'Nama Kategori', 'required');
 
 		if ($this->form_validation->run() == false) {
@@ -1024,8 +1025,14 @@ class Admin extends MY_Controller
 			$this->data['content'] 	= 'admin/master/kategori_form';
 			$this->load->view('admin/template/layout', $this->data);
 		} else {
+			if ($this->Kategori_m->get_num_row(['id_kategori' => $this->input->post('id_kategori')]) > 0) {
+				$this->session->set_flashdata('warning', 'ID Kategori telah digunakan!');
+				redirect('admin/kategori_form');
+				exit;
+			}
 
 			$data = [
+				'id_kategori' => addslashes($this->input->post('id_kategori', true)),
 				'nama_kategori' => addslashes($this->input->post('nama_kategori', true)),
 				'deskripsi' => addslashes($this->input->post('deskripsi', true)),
 				'created_at' => date('Y-m-d H:i:s')
@@ -1067,6 +1074,18 @@ class Admin extends MY_Controller
 	public function kategori_update()
 	{
 
+		$idx = $this->POST('id_kategorix');
+		$id = $this->POST('id_kategori');
+		if ($this->Kategori_m->get_num_row(['id_kategori' => $id]) != 0 && $idx != $id) {
+			$data = [
+				'status' 		=> 'Warning',
+				'icon' 		=> 'warning',
+				'message' 		=> 'ID Kategori telah digunakan!',
+			];
+			echo json_encode($data);
+			exit;
+		}
+
 		$this->form_validation->set_rules('nama_kategori', 'Nama Kategori', 'required');
 
 		if ($this->form_validation->run() == false) {
@@ -1078,16 +1097,18 @@ class Admin extends MY_Controller
 		} else {
 
 			$data = [
+				'id_kategori' => $id,
 				'nama_kategori' => addslashes($this->input->post('nama_kategori', true)),
 				'deskripsi' => addslashes($this->input->post('deskripsi', true)),
 				'updated_at' => date('Y-m-d H:i:s')
 			];
 
-			if ($this->Kategori_m->update($this->POST('id_kategori'), $data)) {
+			if ($this->Kategori_m->update($idx, $data)) {
 				$data = [
-					'status' 		=> 'Success',
+					'status' 		=> 'success',
 					'icon' 		=> 'success',
 					'message' 		=> 'Data berhasil diedit!',
+					'id' 		=> $id,
 				];
 			} else {
 				$data = [
@@ -1387,7 +1408,18 @@ class Admin extends MY_Controller
 				'message' 		=> validation_errors(),
 			];
 		} else {
+			if ($this->Supplier_m->get_num_row(['id_supplier' => $this->input->post('id_supplier')]) > 0) {
+				$data = [
+					'status' 		=> 'warning',
+					'icon' 		=> 'warning',
+					'message' 		=> 'ID Supplier telah digunakan!',
+				];
+				echo json_encode($data);
+				exit;
+			}
+
 			$data_supplier = [
+				'id_supplier' => addslashes($this->input->post('id_supplier', true)),
 				'nama_supplier' => addslashes($this->input->post('nama_supplier', true)),
 				'kontak' => addslashes($this->input->post('kontak', true)),
 				'alamat' => addslashes($this->input->post('alamat', true)),
@@ -1436,6 +1468,18 @@ class Admin extends MY_Controller
 
 	public function supplier_update()
 	{
+		$idx = $this->POST('id_supplierx');
+		$id = $this->POST('id_supplier');
+		if ($this->Supplier_m->get_num_row(['id_supplier' => $id]) != 0 && $idx != $id) {
+			$data = [
+				'status' 		=> 'Warning',
+				'icon' 		=> 'warning',
+				'message' 		=> 'ID Supplier telah digunakan!',
+			];
+			echo json_encode($data);
+			exit;
+		}
+
 		$this->form_validation->set_rules('nama_supplier', 'Nama Supplier', 'required');
 		$this->form_validation->set_rules('kontak', 'Kontak', 'required');
 		$this->form_validation->set_rules('alamat', 'Alamat', 'required');
@@ -1447,19 +1491,20 @@ class Admin extends MY_Controller
 				'message' 		=> validation_errors(),
 			];
 		} else {
-			$id = $this->POST('id_supplier');
 			$data_supplier = [
+				'id_supplier' => $id,
 				'nama_supplier' => addslashes($this->input->post('nama_supplier', true)),
 				'kontak' => addslashes($this->input->post('kontak', true)),
 				'alamat' => addslashes($this->input->post('alamat', true)),
 				'created_at' => date('Y-m-d H:i:s')
 			];
 
-			if ($this->Supplier_m->update($id, $data_supplier)) {
+			if ($this->Supplier_m->update($idx, $data_supplier)) {
 				$data = [
 					'status' 		=> 'success',
 					'icon' 		=> 'success',
 					'message' 		=> 'Supplier berhasil diedit!',
+					'id'	=> $id
 				];
 			} else {
 				$data = [

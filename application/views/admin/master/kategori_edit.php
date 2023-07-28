@@ -8,7 +8,16 @@
             </div>
             <form id="formEditKategori">
 
-                <input type="hidden" class="form-control" name="id_kategori" value="<?= $kategori->id_kategori ?>">
+                <input type="hidden" class="form-control" name="id_kategorix" value="<?= $kategori->id_kategori ?>">
+                <div class="row mb-4 mb-4">
+                    <div class="col-sm-3">
+                        <label for="id_kategori" class="col-form-label">ID Kategori</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="id_kategori" name="id_kategori" value="<?= $kategori->id_kategori ?>" required>
+                        <?= form_error('id_kategori', '<small class="text-danger ">*', '</small>'); ?>
+                    </div>
+                </div>
                 <div class="row mb-4 mb-4">
                     <div class="col-sm-3">
                         <label for="nama_kategori" class="col-form-label">Nama Kategori</label>
@@ -79,8 +88,6 @@
                 success: function(respon) {
                     if (respon.status ==
                         'success') {
-
-
                         Swal.fire({
                             'title': respon
                                 .status,
@@ -89,6 +96,7 @@
                             'text': respon
                                 .message,
                         });
+                        window.location.href = "<?= base_url('admin/kategori_edit/') ?>" + respon.id;
                     } else {
                         Swal.fire({
                             'title': respon

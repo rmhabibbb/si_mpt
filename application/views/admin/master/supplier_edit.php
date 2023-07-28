@@ -7,7 +7,16 @@
                 <hr style="border: 1px solid black;" class="mb-5">
             </div>
             <form id="formSupplier">
-                <input type="hidden" name="id_supplier" value="<?= $supplier->id_supplier ?>">
+                <input type="hidden" name="id_supplierx" value="<?= $supplier->id_supplier ?>">
+                <div class="row mb-4 mb-4">
+                    <div class="col-sm-3">
+                        <label for="id_supplier" class="col-form-label">ID Supplier</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="id_supplier" name="id_supplier" value="<?= $supplier->id_supplier ?>" required>
+                        <?= form_error('id_supplier', '<small class="text-danger ">*', '</small>'); ?>
+                    </div>
+                </div>
                 <div class="row mb-4 mb-4">
                     <div class="col-sm-3">
                         <label for="nama_supplier" class="col-form-label">Nama Supplier</label>
@@ -114,6 +123,7 @@
                                 .message,
                         });
 
+                        window.location.href = "<?= base_url('admin/supplier_edit/') ?>" + respon.id;
                     } else {
                         Swal.fire({
                             'title': respon

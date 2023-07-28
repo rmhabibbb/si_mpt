@@ -9,6 +9,15 @@
             <form action="<?= base_url() . 'admin/kategori_store'; ?>" method="post">
                 <div class="row mb-4 mb-4">
                     <div class="col-sm-3">
+                        <label for="id_kategori" class="col-form-label">ID Kategori</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="id_kategori" name="id_kategori" required>
+                        <?= form_error('id_kategori', '<small class="text-danger ">*', '</small>'); ?>
+                    </div>
+                </div>
+                <div class="row mb-4 mb-4">
+                    <div class="col-sm-3">
                         <label for="nama_kategori" class="col-form-label">Nama Kategori</label>
                     </div>
                     <div class="col-sm-9">

@@ -9,6 +9,15 @@
             <form id="formSupplier">
                 <div class="row mb-4 mb-4">
                     <div class="col-sm-3">
+                        <label for="id_supplier" class="col-form-label">ID Supplier</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="id_supplier" name="id_supplier" required>
+                        <?= form_error('id_supplier', '<small class="text-danger ">*', '</small>'); ?>
+                    </div>
+                </div>
+                <div class="row mb-4 mb-4">
+                    <div class="col-sm-3">
                         <label for="nama_supplier" class="col-form-label">Nama Supplier</label>
                     </div>
                     <div class="col-sm-9">
