@@ -49,6 +49,17 @@ class Admin extends MY_Controller
 		$this->load->view('admin/template/layout', $this->data);
 	}
 
+	public function reminder()
+	{
+		$x = $this->Barang_m->get(['deleted_at' => NULL, 'stok <=' => 5]);
+
+		$data = [
+			'data' => $x
+		];
+
+		echo json_encode($data);
+	}
+
 	public function getDataBarangTransaksi()
 	{
 		$x = $this->input->get('x');

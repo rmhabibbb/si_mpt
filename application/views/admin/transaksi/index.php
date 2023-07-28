@@ -122,6 +122,7 @@
 <script type="text/javascript" src="<?= base_url(); ?>assets/js/fancybox.min.js"></script>
 
 <script>
+    reminder();
     loadCart();
     var x = $('#id_kategori').find(":selected").val();
     var dataAplikasi = $('#data-table-barang').DataTable({
@@ -546,6 +547,44 @@
                     $('#batalTransaksi').attr('disabled', false);
                     $('#checkoutTransaksi').attr('disabled', false);
                 }
+
+            },
+            error: function() {
+                Swal.fire({
+                    'title': 'Maaf',
+                    'icon': 'error',
+                    'text': 'Gagal mengambil data keranjang!',
+                })
+            }
+        })
+    }
+
+    function reminder() {
+        $.ajax({
+            'url': '<?= base_url('Admin/reminder') ?>',
+            'type': 'POST',
+            'dataType': 'json',
+            success: function(respon) {
+                var msg = '';
+                $.each(respon.data, function(key, val) {
+                    msg += '- ' + val.nama_barang + ' (Stok : ' + val.stok + ')<br>';
+                });
+
+                Swal.fire({
+                    title: 'Supply barang?',
+                    html: 'Stok barang akan habis!<br>' + msg,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya!',
+                    cancelButtonText: 'Tidak'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        window.location.href = "<?= base_url('admin/supply/') ?>";
+                    }
+                })
 
             },
             error: function() {
