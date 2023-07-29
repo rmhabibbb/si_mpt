@@ -13,7 +13,7 @@
 <div class="container-fluid">
     <div class="row mb-3">
         <div class="col-md-12 bg-white p-4 rounded shadow">
-            <?php echo form_open_multipart('pemilik/download_laporan_penjualan'); ?>
+            <?php echo form_open_multipart('pemilik/pdf_penjualan'); ?>
             <div class="row">
                 <div class="col-md-7 mt-2">
                     <div class="row">
@@ -34,7 +34,8 @@
                 </div>
                 <div class="col-md-5 mt-2">
                     <a href="javascript:" class="btn btn-primary me-2" id="filter">Filter</a>
-                    <button type="submit" class="btn btn-success" id="export"><span class="far fa-file-excel me-2"></span>Export</button>
+                    <!-- <button type="submit" class="btn btn-success" id="export"><span class="far fa-file-excel me-2"></span>Export</button> -->
+                    <button type="submit" name="pdf" class="btn btn-danger" id="pdf"><span class="far fa-fa-download me-2"></span>Download PDF</button>
                 </div>
             </div>
         </div>

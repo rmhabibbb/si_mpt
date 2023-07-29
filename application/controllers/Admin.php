@@ -2139,10 +2139,135 @@ class Admin extends MY_Controller
 
 
 
+	public function pdf_penjualan()
+	{
+		$start_date = $this->input->post('start_date');
+		$end_date = $this->input->post('end_date');
 
+		if ($start_date == "" && $end_date == "") {
+			$filename         = 'Laporan_Penjualan - SEMUA';
+			$this->data['periode'] = "SEMUA";
+			$data_penjualan = $this->Transaksi_m->get(['status' => 1]);
+		} else {
+			if ($start_date == $end_date) {
+				$filename         = 'Laporan_Penjualan - ' . $start_date;
+				$this->data['periode'] = date('d/m/Y', strtotime($start_date));
+				$data_penjualan = $this->Transaksi_m->get(['DATE(tgl_transaksi)' => $start_date, 'status' => 1]);
+			} else {
+				$filename         = 'Laporan_Penjualan_' . $start_date . '-' . $end_date;
+				$this->data['periode'] = date('d/m/Y', strtotime($start_date)) . ' - ' . date('d/m/Y', strtotime($end_date));
+				$data_penjualan = $this->Transaksi_m->get(['DATE(tgl_transaksi) >=' => $start_date, 'DATE(tgl_transaksi) <=' => $end_date, 'status' => 1]);
+			}
+		}
 
+		$this->data['data_penjualan'] = $data_penjualan;
+		$this->data['start'] = $start_date;
+		$this->data['end'] = $end_date;
 
+		$mpdf = new \Mpdf\Mpdf();
+		$html = $this->load->view('admin/laporan/download_penjualan', $this->data, true);
+		$mpdf->WriteHTML($html);
+		// $mpdf->Output(); // opens in browser
+		$mpdf->Output($filename . '.pdf', 'D'); // it downloads the file into the user system, with give name
+	}
 
+	public function pdf_pembelian()
+	{
+		$start_date = $this->input->post('start_date');
+		$end_date = $this->input->post('end_date');
+
+		if ($start_date == "" && $end_date == "") {
+			$filename         = 'Laporan Pembelian - SEMUA';
+			$this->data['periode'] = "SEMUA";
+			$data_pembelian = $this->Supply_m->view_transaksi_supply(['status' => 1]);
+		} else {
+			if ($start_date == $end_date) {
+				$filename         = 'Laporan Pembelian - ' . $start_date;
+				$this->data['periode'] = date('d/m/Y', strtotime($start_date));
+				$data_pembelian = $this->Supply_m->view_transaksi_supply(['status' => 1]);
+			} else {
+				$filename         = 'Laporan Pembelian ' . $start_date . '-' . $end_date;
+				$this->data['periode'] = date('d/m/Y', strtotime($start_date)) . ' - ' . date('d/m/Y', strtotime($end_date));
+				$data_pembelian = $this->Supply_m->view_transaksi_supply(['DATE(tgl_transaksi) >=' => $start_date, 'DATE(tgl_transaksi) <=' => $end_date, 'status' => 1]);
+			}
+		}
+
+		$this->data['data_pembelian'] = $data_pembelian;
+		$this->data['start'] = $start_date;
+		$this->data['end'] = $end_date;
+
+		$mpdf = new \Mpdf\Mpdf();
+		$html = $this->load->view('admin/laporan/download_pembelian', $this->data, true);
+		$mpdf->WriteHTML($html);
+		// $mpdf->Output(); // opens in browser
+		$mpdf->Output($filename . '.pdf', 'D'); // it downloads the file into the user system, with give name
+	}
+
+	public function pdf_stok()
+	{
+		$start_date = $this->input->post('start_date');
+		$end_date = $this->input->post('end_date');
+		$list_barang = $this->Barang_m->view_barang('deleted_at', 'asc', []);
+
+		if ($start_date == "" && $end_date == "") {
+			$filename         = 'Laporan_Stok_Barang - SEMUA';
+			$this->data['periode'] = "SEMUA";
+
+			$data_pembelian = $this->Supply_m->view_transaksi_supply(['status' => 1]);
+			$data_penjualan = $this->Transaksi_m->get(['status' => 1]);
+		} else {
+			if ($start_date == $end_date) {
+				$filename         = 'Laporan_Stok_Barang - ' . $start_date;
+				$this->data['periode'] = date('d/m/Y', strtotime($start_date));
+
+				$data_pembelian = $this->Supply_m->view_transaksi_supply(['DATE(tgl_transaksi)' => $start_date, 'status' => 1]);
+				$data_penjualan = $this->Transaksi_m->get(['DATE(tgl_transaksi)' => $start_date, 'status' => 1]);
+			} else {
+				$filename         = 'Laporan_Stok_Barang_' . $start_date . '-' . $end_date;
+				$this->data['periode'] = date('d/m/Y', strtotime($start_date)) . ' - ' . date('d/m/Y', strtotime($end_date));
+
+				$data_pembelian = $this->Supply_m->view_transaksi_supply(['DATE(tgl_transaksi) >=' => $start_date, 'DATE(tgl_transaksi) <=' => $end_date, 'status' => 1]);
+				$data_penjualan = $this->Transaksi_m->get(['DATE(tgl_transaksi) >=' => $start_date, 'DATE(tgl_transaksi) <=' => $end_date, 'status' => 1]);
+			}
+		}
+
+		$data = [];
+		foreach ($list_barang as $val) {
+
+			$n_beli = 0;
+			$n_jual = 0;
+
+			foreach ($data_pembelian as $tb) {
+				$n_beli = $n_beli + $this->DetailTransaksi_m->get_sum_beli(['kd_transaksi' => $tb->kd_transaksi, 'id_barang' => $val->id_barang]);
+			}
+
+			foreach ($data_penjualan as $tb) {
+				$n_jual = $n_jual + $this->DetailTransaksi_m->get_sum_jual(['kd_transaksi' => $tb->kd_transaksi, 'id_barang' => $val->id_barang]);
+			}
+
+			$x = [
+				"id_barang" => $val->id_barang,
+				"nama_barang" => $val->nama_barang,
+				"nama_kategori" => $val->nama_kategori,
+				"ukuran" => $val->ukuran,
+				"jenis" => $val->jenis,
+				"n_beli" => $n_beli,
+				"n_jual" => $n_jual,
+			];
+
+			array_push($data, $x);
+		}
+
+		$this->data['data'] = $data;
+		$this->data['start'] = $start_date;
+		$this->data['end'] = $end_date;
+
+		$mpdf = new \Mpdf\Mpdf();
+		$html = $this->load->view('admin/laporan/download_stok', $this->data, true);
+		$mpdf->WriteHTML($html);
+		// $mpdf->Output(); // opens in browser
+		$mpdf->Output($filename . '.pdf', 'D'); // it downloads the file into the user system, with give name
+	}
 
 
 	// PROFILE
