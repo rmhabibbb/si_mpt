@@ -52,6 +52,7 @@ class Transaksi_m extends MY_Model
 			}
 		}
 
+		$this->db->where(['DATEDIFF(DATE(tgl_transaksi), CURDATE()) =' => 0]);
 		$this->db->where(['status' => 1]);
 		$this->db->from('tbl_transaksi_penjualan');
 
