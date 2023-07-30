@@ -381,7 +381,7 @@ class Kasir extends MY_Controller
 
 	public function getDataTransaksi()
 	{
-		$list = $this->Transaksi_m->get_datatables();
+		$list = $this->Transaksi_m->get_datatables("", "", 1);
 		$data = array();
 		$no = $_POST['start'];
 		foreach ($list as $field) {

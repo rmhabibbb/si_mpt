@@ -19,7 +19,7 @@ class Transaksi_m extends MY_Model
 	var $column_search = array('kd_transaksi', 'nama_customer', 'total_bayar', 'tgl_transaksi'); //field yang diizin untuk pencarian 
 	var $order = array('tgl_transaksi' => 'DESC'); // default order 
 
-	private function _get_datatables_query($start_date, $end_date)
+	private function _get_datatables_query($start_date, $end_date, $return = 0)
 	{
 
 		$i = 0;
@@ -52,7 +52,9 @@ class Transaksi_m extends MY_Model
 			}
 		}
 
-		$this->db->where(['DATEDIFF(DATE(tgl_transaksi), CURDATE()) =' => 0]);
+		if ($return == 1) {
+			$this->db->where(['DATEDIFF(DATE(tgl_transaksi), CURDATE()) =' => 0]);
+		}
 		$this->db->where(['status' => 1]);
 		$this->db->from('tbl_transaksi_penjualan');
 
@@ -65,9 +67,9 @@ class Transaksi_m extends MY_Model
 		}
 	}
 
-	function get_datatables($start_date = "", $end_date = "")
+	function get_datatables($start_date = "", $end_date = "", $return = 0)
 	{
-		$this->_get_datatables_query($start_date, $end_date);
+		$this->_get_datatables_query($start_date, $end_date, $return);
 		if ($_POST['length'] != -1)
 			$this->db->limit($_POST['length'], $_POST['start']);
 		$query = $this->db->get();
