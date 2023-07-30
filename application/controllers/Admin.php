@@ -1408,6 +1408,7 @@ class Admin extends MY_Controller
 
 	public function supplier_store()
 	{
+		$this->form_validation->set_rules('id_supplier', 'ID Supplier', 'required');
 		$this->form_validation->set_rules('nama_supplier', 'Nama Supplier', 'required');
 		$this->form_validation->set_rules('kontak', 'Kontak', 'required');
 		$this->form_validation->set_rules('alamat', 'Alamat', 'required');
